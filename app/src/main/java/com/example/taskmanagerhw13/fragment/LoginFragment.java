@@ -1,8 +1,10 @@
 package com.example.taskmanagerhw13.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.taskmanagerhw13.R;
+import com.example.taskmanagerhw13.activity.MainActivity;
+import com.example.taskmanagerhw13.activity.TaskPagerActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,6 +28,7 @@ public class LoginFragment extends Fragment {
     private EditText mEditTextPassword;
     private Button mButtonLogIn;
     private Button mButtonSignIn;
+    private Callbacks mCallbacks;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -46,7 +51,7 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         findAllView(view);
         setListeners();
@@ -54,6 +59,7 @@ public class LoginFragment extends Fragment {
         return view;
 
     }
+
     private void findAllView(View view) {
         mEditTextUsername = view.findViewById(R.id.edit_text_username);
         mEditTextPassword = view.findViewById(R.id.edit_text_password);
@@ -75,10 +81,30 @@ public class LoginFragment extends Fragment {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Intent intent = new Intent(getActivity(), TaskPagerActivity.class);
-                startActivity(intent);
+                mCallbacks.onLoginClicked();
             }
         });
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Callbacks)
+            mCallbacks = (Callbacks) context;
+        else {
+            throw new ClassCastException(context.toString()
+                    + "you must Implement onLoginClicked");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks= null;
+    }
+
+    public interface Callbacks {
+        void onLoginClicked();
+
     }
 }
