@@ -12,7 +12,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.taskmanagerhw13.R;
+import com.example.taskmanagerhw13.Repository.TasksRepository;
 import com.example.taskmanagerhw13.Utils.TaskState;
+import com.example.taskmanagerhw13.fragment.TasksFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;

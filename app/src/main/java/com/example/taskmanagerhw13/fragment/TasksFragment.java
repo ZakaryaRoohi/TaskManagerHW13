@@ -20,10 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.MyTaskManager.R;
-import com.example.MyTaskManager.Repository.TasksRepository;
-import com.example.MyTaskManager.Utilitis.TaskState;
-import com.example.MyTaskManager.model.Task;
+
+import com.example.taskmanagerhw13.R;
+import com.example.taskmanagerhw13.Repository.TasksRepository;
+import com.example.taskmanagerhw13.Utils.TaskState;
+import com.example.taskmanagerhw13.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
