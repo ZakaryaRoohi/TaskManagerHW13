@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class SinInFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
     }
 
     @Override
@@ -70,22 +71,27 @@ public class SinInFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if(context instanceof Callbacks)
-            mCallBacks= (Callbacks) context;
+        if (context instanceof Callbacks)
+            mCallBacks = (Callbacks) context;
         else {
-            throw  new ClassCastException(context.toString()
-            + "you must implement onBackPressed");
+            throw new ClassCastException(context.toString()
+                    + "you must implement onBackClicked");
         }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallBacks=null;
+        mCallBacks = null;
     }
 
     public interface Callbacks {
         void onBackClicked();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
     }
 }
