@@ -1,9 +1,9 @@
 package com.example.taskmanagerhw13.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,22 +13,29 @@ import android.widget.Toast;
 
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.fragment.LoginFragment;
+import com.example.taskmanagerhw13.fragment.SinInFragment;
+import com.example.taskmanagerhw13.fragment.SinInFragment.Callbacks;
 
-public class MainActivity extends AppCompatActivity implements LoginFragment.Callbacks{
+public class MainActivity extends AppCompatActivity
+        implements SinInFragment.Callbacks, LoginFragment.Callbacks{
 
+    public static Intent newIntent(Context context){
+        Intent intent = new Intent(context,MainActivity.class);
+        return intent;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
-        if (fragment == null) {
+//        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.fragment_container, LoginFragment.newInstance())
                     .commit();
-        }
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -58,4 +65,26 @@ public class MainActivity extends AppCompatActivity implements LoginFragment.Cal
         startActivity(intent);
 
     }
+
+    @Override
+    public void onSinInClicked() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+            fragmentManager
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new SinInFragment())
+                    .commit();
+
+    }
+    @Override
+    public void onBackClicked() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+//        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
+        fragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container, new LoginFragment())
+                .commit();
+
+    }
+
 }

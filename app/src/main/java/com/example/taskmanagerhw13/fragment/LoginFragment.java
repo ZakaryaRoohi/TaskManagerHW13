@@ -71,11 +71,7 @@ public class LoginFragment extends Fragment {
         mButtonSignIn.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//
-                String userName = mEditTextUsername.getText().toString();
-                String password = mEditTextPassword.getText().toString();
-
-
+                mCallbacks.onSinInClicked();
             }
         }));
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +101,6 @@ public class LoginFragment extends Fragment {
 
     public interface Callbacks {
         void onLoginClicked();
-
+        void onSinInClicked();
     }
 }
