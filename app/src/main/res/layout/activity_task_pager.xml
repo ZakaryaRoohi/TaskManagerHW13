@@ -21,7 +21,9 @@
                 android:id="@+id/tab_layout_task_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary">
+                android:background="?attr/colorPrimary"
+                app:tabSelectedTextColor="#F8F4F4"
+                app:tabTextColor="#B1B1AE">
 
             </com.google.android.material.tabs.TabLayout>
 

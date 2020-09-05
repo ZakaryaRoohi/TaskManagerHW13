@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class TasksRepository implements Serializable {
     private static TasksRepository sTasksRepository;
@@ -26,7 +27,7 @@ public class TasksRepository implements Serializable {
         mTasks = new ArrayList<>();
         for (int i = 0; i < mNumberOfTasks; i++) {
             Task task = new Task();
-            task.setTaskName("Task : " + (i + 1));
+            task.setTaskTitle("Task : " + (i + 1));
             task.setTaskState(randomTaskState());
             mTasks.add(task);
         }
@@ -61,7 +62,7 @@ public class TasksRepository implements Serializable {
 
     public void addTask() {
         Task task = new Task();
-        task.setTaskName("Task : " + (sTasksRepository.getList().size()));
+        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()));
         task.setTaskState(randomTaskState());
         mTasks.add(task);
     }
@@ -72,5 +73,22 @@ public class TasksRepository implements Serializable {
 
     public void cleanTaskRepository() {
         sTasksRepository = null;
+    }
+
+    public Task get(UUID uuid) {
+        for (Task crime: mTasks) {
+            if (crime.getId().equals(uuid))
+                return crime;
+        }
+
+        return null;
+    }
+    public void update(Task task) {
+        Task updateTask = get(task.getId());
+        updateTask.setTaskTitle(task.getTaskTitle());
+        updateTask.setTaskDescription(task.getTaskDescription());
+        updateTask.setTaskState(task.getTaskState());
+        updateTask.setTaskDate(task.getTaskDate());
+
     }
 }

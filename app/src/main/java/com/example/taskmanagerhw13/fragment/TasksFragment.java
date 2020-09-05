@@ -1,11 +1,9 @@
 package com.example.taskmanagerhw13.fragment;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,11 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.example.taskmanagerhw13.R;
@@ -28,7 +23,6 @@ import com.example.taskmanagerhw13.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
-import java.util.Objects;
 
 
 public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
@@ -36,6 +30,8 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
      * get username and number of Tasks from Task activity
      */
     private static final String ARG_TASK_STATE = "ArgsTaskState";
+    public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
+    public static final int TASK_DETAIL_REQUEST_CODE = 101;
     private TasksRepository mTasksRepository;
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
@@ -112,12 +108,26 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
 
         private TextView mTextViewTaskTittle;
         private TextView mTextViewTaskState;
+        private TextView mTextViewTaskDate;
         private Task mTask;
 
         public TaskHolder(@NonNull View itemView) {
             super(itemView);
             mTextViewTaskTittle = itemView.findViewById(R.id.list_row_task_title);
             mTextViewTaskState = itemView.findViewById(R.id.list_row_Task_state);
+            mTextViewTaskDate = itemView.findViewById(R.id.text_view_task_date);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(mTask.getId());
+                    taskDetailFragment.setTargetFragment(TasksFragment.this,TASK_DETAIL_REQUEST_CODE);
+                    taskDetailFragment.show(getFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
+
+
+                }
+            });
         }
 
         public void bindTask(Task task) {
@@ -127,8 +137,9 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
             else
                 itemView.setBackgroundColor(Color.WHITE);
 
-            mTextViewTaskTittle.setText(task.getTaskName());
+            mTextViewTaskTittle.setText(task.getTaskTitle());
             mTextViewTaskState.setText(task.getTaskState().toString());
+            mTextViewTaskDate.setText(task.getTaskDate().toString());
         }
     }
 
