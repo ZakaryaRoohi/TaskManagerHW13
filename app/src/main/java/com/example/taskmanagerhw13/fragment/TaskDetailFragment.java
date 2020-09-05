@@ -1,19 +1,24 @@
 package com.example.taskmanagerhw13.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.Repository.TasksRepository;
@@ -45,6 +50,7 @@ public class TaskDetailFragment extends DialogFragment {
     private Button mButtonDate;
     private Button mButtonSave;
     private Button mButtonDiscard;
+//    private Callbacks mCallbacks;
 
     public TaskDetailFragment() {
         // Required empty public constructor
@@ -66,7 +72,25 @@ public class TaskDetailFragment extends DialogFragment {
         UUID taskId = (UUID) getArguments().getSerializable(ARG_TASK_ID);
         mTask = (Task) mTasksRepository.get(taskId);
 //        Toast.makeText(getActivity(),"uuid"+mTask.getId(),Toast.LENGTH_SHORT).show();
+
     }
+
+//    @Override
+//    public void onAttach(@NonNull Context context) {
+//        super.onAttach(context);
+//        if (context instanceof Callbacks)
+//            mCallbacks = (Callbacks) context;
+//        else {
+//            throw new ClassCastException(context.toString()
+//                    + "you must Implements onTaskUpdated");
+//        }
+//    }
+
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        mCallbacks=null;
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,12 +100,13 @@ public class TaskDetailFragment extends DialogFragment {
         findViews(view);
         setListeners();
         initViews();
+
         return view;
     }
 
     private void findViews(View view) {
-        mEditTextTaskTitle = view.findViewById(R.id.task_title);
-        mEditTextDescription = view.findViewById(R.id.text_view_description);
+        mEditTextTaskTitle = view.findViewById(R.id.edit_text_task_title);
+        mEditTextDescription = view.findViewById(R.id.edit_text_task_description);
         mButtonDate = view.findViewById(R.id.task_date);
         mButtonSave = view.findViewById(R.id.button_save);
         mButtonDiscard = view.findViewById(R.id.button_discard);
@@ -100,20 +125,58 @@ public class TaskDetailFragment extends DialogFragment {
     }
 
     private void setTaskState(TaskState taskState) {
-        switch (taskState) {
-            case DONE:
-                mRadioButtonDone.setChecked(true);
-                break;
-            case DOING:
-                mRadioButtonDoing.setChecked(true);
-                break;
-            case TODO:
-                mRadioButtonTodo.setChecked(true);
-                break;
+        if (taskState != null) {
+            switch (taskState) {
+                case DONE:
+                    mRadioButtonDone.setChecked(true);
+                    break;
+                case DOING:
+                    mRadioButtonDoing.setChecked(true);
+                    break;
+                case TODO:
+                    mRadioButtonTodo.setChecked(true);
+                    break;
+
+            }
         }
     }
 
+
     private void setListeners() {
+//        mEditTextDescription.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                mTask.setTaskDescription(s.toString());
+//                updateTask();
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
+//        mEditTextTaskTitle.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                mTask.setTaskTitle(s.toString());
+//                updateTask();
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//            }
+//        });
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,13 +188,25 @@ public class TaskDetailFragment extends DialogFragment {
         mButtonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-getActivity().finish();
+                if (mTask.getTaskState() == null)
+                    Toast.makeText(getActivity(), "please choose Task State", Toast.LENGTH_SHORT).show();
+                else {
+
+                    mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
+                    mTask.setTaskDescription((mEditTextDescription.getText().toString()));
+                    updateTask();
+
+//                    TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//
+//                    tasksFragment.updateUI();
+                    getDialog().hide();
+                }
             }
         });
         mButtonDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getDialog().hide();
             }
         });
         mRadioButtonDone.setOnClickListener(new View.OnClickListener() {
@@ -171,11 +246,17 @@ getActivity().finish();
 
             updateTask();
         }
+
     }
 
     private void updateTask() {
         mTasksRepository.update(mTask);
-//        mCallbacks.onCrimeUpdated(mCrime);
+//        mCallbacks.onTaskUpdated();
+
     }
+
+//    public interface Callbacks {
+//        void onTaskUpdated();
+//    }
 
 }

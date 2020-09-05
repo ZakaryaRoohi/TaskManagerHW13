@@ -14,7 +14,9 @@ import android.os.Bundle;
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.Repository.TasksRepository;
 import com.example.taskmanagerhw13.Utils.TaskState;
+import com.example.taskmanagerhw13.fragment.TaskDetailFragment;
 import com.example.taskmanagerhw13.fragment.TasksFragment;
+import com.example.taskmanagerhw13.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -26,14 +28,16 @@ import android.os.Bundle;
 
 
 
-public class TaskPagerActivity extends AppCompatActivity {
+public class TaskPagerActivity extends AppCompatActivity implements TasksFragment.Callbacks {
 
     public static Intent newIntent(Context context){
         Intent intent = new Intent(context,TaskPagerActivity.class);
         return  intent;
     }
 
-
+    public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
+    public static final int TASK_DETAIL_REQUEST_CODE = 101;
+    private TasksRepository mTasksRepository;
     public static final String EXTRA_USERNAME = "extraUsername";
     private ViewPager2 viewPager;
     private TabLayout mTabLayout;
@@ -85,6 +89,35 @@ public class TaskPagerActivity extends AppCompatActivity {
             viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
     }
+
+    @Override
+    public void onAddTaskClicked() {
+        Task newTask = new Task();
+        mTasksRepository = TasksRepository.getInstance();
+        mTasksRepository.addTask(newTask);
+
+        TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(newTask.getId());
+
+        taskDetailFragment.show(getSupportFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
+    }
+
+//    @Override
+//    public void onTaskUpdated() {
+//        TasksFragment tasksFragment = (TasksFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.fragment_container);
+//        tasksFragment.updateUI();
+//
+//    }
+
+//    @Override
+//    public void onTaskUpdated() {
+//
+//            TasksFragment tasksFragment = (TasksFragment) getSupportFragmentManager()
+//                    .findFragmentById(R.id.fragment_container);
+//
+//            tasksFragment.updateUI();
+//
+//    }
 
     private class TaskPagerAdapter extends FragmentStateAdapter {
         public TaskPagerAdapter(FragmentActivity fragmentManager) {

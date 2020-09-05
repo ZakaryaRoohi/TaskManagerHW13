@@ -1,9 +1,12 @@
 package com.example.taskmanagerhw13.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -39,6 +42,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     private TaskState mTaskState;
     private LinearLayout mLinearLayout1;
     private LinearLayout mLinearLayout2;
+    private Callbacks mCallbacks;
 
     public TaskAdapter getAdapter() {
         return mAdapter;
@@ -98,10 +102,29 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         mFloatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mTasksRepository.addTask();
-                updateUI();
+//                Task newTask = new Task();
+//                mTasksRepository.addTask(newTask);
+//                updateUI();
+//                TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(newTask.getId());
+//                taskDetailFragment.setTargetFragment(TasksFragment.this,TASK_DETAIL_REQUEST_CODE);
+//                taskDetailFragment.show(getFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
+                mCallbacks.onAddTaskClicked();
             }
         });
+    }
+
+    public interface Callbacks {
+        void onAddTaskClicked();
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Callbacks)
+            mCallbacks = (Callbacks) context;
+        else {
+            throw new ClassCastException(context.toString() + "you must implement onAddTaskClicked");
+        }
     }
 
     private class TaskHolder extends RecyclerView.ViewHolder {
@@ -121,8 +144,8 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(mTask.getId());
-                    taskDetailFragment.setTargetFragment(TasksFragment.this,TASK_DETAIL_REQUEST_CODE);
+                    TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(mTask.getId());
+                    taskDetailFragment.setTargetFragment(TasksFragment.this, TASK_DETAIL_REQUEST_CODE);
                     taskDetailFragment.show(getFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
 
 
@@ -179,7 +202,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         }
     }
 
-    private void updateUI() {
+    public void updateUI() {
         List<Task> tasks = mTasksRepository.getList(mTaskState);
         if (mAdapter == null) {
             mAdapter = new TaskAdapter(tasks);
@@ -205,5 +228,9 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         updateUI();
     }
 
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        updateUI();
+    }
 }

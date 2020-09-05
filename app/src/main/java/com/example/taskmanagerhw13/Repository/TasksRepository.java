@@ -27,8 +27,8 @@ public class TasksRepository implements Serializable {
         mTasks = new ArrayList<>();
         for (int i = 0; i < mNumberOfTasks; i++) {
             Task task = new Task();
-            task.setTaskTitle("Task : " + (i + 1));
-            task.setTaskState(randomTaskState());
+//            task.setTaskTitle("Task : " + (i + 1));
+//            task.setTaskState(randomTaskState());
             mTasks.add(task);
         }
     }
@@ -62,8 +62,13 @@ public class TasksRepository implements Serializable {
 
     public void addTask() {
         Task task = new Task();
-        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()));
-        task.setTaskState(randomTaskState());
+        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()+1));
+//        task.setTaskState(randomTaskState());
+        mTasks.add(task);
+    }
+    public void addTask(Task task){
+//        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()+1));
+//        task.setTaskDescription("new");
         mTasks.add(task);
     }
 
@@ -76,11 +81,10 @@ public class TasksRepository implements Serializable {
     }
 
     public Task get(UUID uuid) {
-        for (Task crime: mTasks) {
-            if (crime.getId().equals(uuid))
-                return crime;
+        for (Task task: mTasks) {
+            if (task.getId().equals(uuid))
+                return task;
         }
-
         return null;
     }
     public void update(Task task) {

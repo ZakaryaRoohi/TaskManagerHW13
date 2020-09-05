@@ -70,8 +70,10 @@ public class Task {
         mTaskDate = new Date();
 
 
+
     }
     public Task(){
         this(UUID.randomUUID());
+
     }
 }
