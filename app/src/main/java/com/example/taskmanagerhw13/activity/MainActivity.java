@@ -13,11 +13,10 @@ import android.widget.Toast;
 
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.fragment.LoginFragment;
-import com.example.taskmanagerhw13.fragment.SinInFragment;
-import com.example.taskmanagerhw13.fragment.SinInFragment.Callbacks;
+import com.example.taskmanagerhw13.fragment.SignInFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements SinInFragment.Callbacks, LoginFragment.Callbacks{
+        implements SignInFragment.Callbacks, LoginFragment.Callbacks{
 
     public static Intent newIntent(Context context){
         Intent intent = new Intent(context,MainActivity.class);
@@ -61,8 +60,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onLoginClicked() {
-        Intent intent = TaskPagerActivity.newIntent(this);
-        startActivity(intent);
+//        Intent intent = TaskPagerActivity.newIntent(this);
+//        startActivity(intent);
 
     }
 
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity
 //        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new SinInFragment())
+                    .replace(R.id.fragment_container, new SignInFragment())
                     .commit();
 
     }

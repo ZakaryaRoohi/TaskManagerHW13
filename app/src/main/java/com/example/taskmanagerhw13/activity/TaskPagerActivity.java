@@ -27,29 +27,27 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
+public class TaskPagerActivity extends AppCompatActivity implements TasksFragment.Callbacks, TaskDetailFragment.Callbacks {
 
-public class TaskPagerActivity extends AppCompatActivity implements TasksFragment.Callbacks {
-
-    public static Intent newIntent(Context context){
-        Intent intent = new Intent(context,TaskPagerActivity.class);
-        return  intent;
-    }
-
+    public static final String EXTRA_BUNDLE_USERNAME = "extraBundleUsername";
     public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
     public static final int TASK_DETAIL_REQUEST_CODE = 101;
     private TasksRepository mTasksRepository;
-    public static final String EXTRA_USERNAME = "extraUsername";
     private ViewPager2 viewPager;
     private TabLayout mTabLayout;
     private FloatingActionButton mFloatingActionButtonAdd;
     String[] titles = {"Done", "Doing", "Todo"};
     private FragmentStateAdapter pagerAdapter;
 
-    public static Intent newIntent(Context context, String username) {
+    public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, TaskPagerActivity.class);
-        intent.putExtra(EXTRA_USERNAME, username);
         return intent;
 
+    }
+    public static Intent newIntent(Context context, String username) {
+        Intent intent = new Intent(context, TaskPagerActivity.class);
+        intent.putExtra(EXTRA_BUNDLE_USERNAME, username);
+        return intent;
     }
 
     @Override
@@ -57,7 +55,7 @@ public class TaskPagerActivity extends AppCompatActivity implements TasksFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_pager);
         Intent intent = getIntent();
-        this.setTitle(intent.getStringExtra(EXTRA_USERNAME));
+        this.setTitle(intent.getStringExtra(EXTRA_BUNDLE_USERNAME));
 
         findViews();
         setListeners();
@@ -96,9 +94,14 @@ public class TaskPagerActivity extends AppCompatActivity implements TasksFragmen
         mTasksRepository = TasksRepository.getInstance();
         mTasksRepository.addTask(newTask);
 
-        TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(newTask.getId());
+        TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(newTask.getId());
 
         taskDetailFragment.show(getSupportFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
+    }
+
+    @Override
+    public void onTaskUpdated() {
+
     }
 
 //    @Override

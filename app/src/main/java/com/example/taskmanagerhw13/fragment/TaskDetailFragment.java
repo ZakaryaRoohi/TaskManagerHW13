@@ -50,7 +50,7 @@ public class TaskDetailFragment extends DialogFragment {
     private Button mButtonDate;
     private Button mButtonSave;
     private Button mButtonDiscard;
-//    private Callbacks mCallbacks;
+    private Callbacks mCallbacks;
 
     public TaskDetailFragment() {
         // Required empty public constructor
@@ -75,22 +75,22 @@ public class TaskDetailFragment extends DialogFragment {
 
     }
 
-//    @Override
-//    public void onAttach(@NonNull Context context) {
-//        super.onAttach(context);
-//        if (context instanceof Callbacks)
-//            mCallbacks = (Callbacks) context;
-//        else {
-//            throw new ClassCastException(context.toString()
-//                    + "you must Implements onTaskUpdated");
-//        }
-//    }
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof Callbacks)
+            mCallbacks = (Callbacks) context;
+        else {
+            throw new ClassCastException(context.toString()
+                    + "you must Implements onTaskUpdated");
+        }
+    }
 
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mCallbacks=null;
-//    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks=null;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -141,6 +141,15 @@ public class TaskDetailFragment extends DialogFragment {
         }
     }
 
+//    @Override
+//    public void onDestroy() {
+//        super.onDestroy();
+////        TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+////
+////        tasksFragment.updateUI();
+//
+//        mCallbacks.onTaskUpdated();
+//    }
 
     private void setListeners() {
 //        mEditTextDescription.addTextChangedListener(new TextWatcher() {
@@ -195,11 +204,10 @@ public class TaskDetailFragment extends DialogFragment {
                     mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
                     mTask.setTaskDescription((mEditTextDescription.getText().toString()));
                     updateTask();
-
-//                    TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//
-//                    tasksFragment.updateUI();
+                    mCallbacks.onTaskUpdated();
                     getDialog().hide();
+
+
                 }
             }
         });
@@ -255,8 +263,8 @@ public class TaskDetailFragment extends DialogFragment {
 
     }
 
-//    public interface Callbacks {
-//        void onTaskUpdated();
-//    }
+    public interface Callbacks {
+        void onTaskUpdated();
+    }
 
 }

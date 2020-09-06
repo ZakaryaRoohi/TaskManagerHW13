@@ -1,0 +1,45 @@
+package com.example.taskmanagerhw13.Repository;
+
+import com.example.taskmanagerhw13.Utils.TaskState;
+import com.example.taskmanagerhw13.Utils.UserType;
+import com.example.taskmanagerhw13.model.Task;
+import com.example.taskmanagerhw13.model.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserRepository {
+
+    private static UserRepository sUserRepository;
+    private List<User> mUsers;
+    public static int mNumberOfUsers;
+
+    public static UserRepository getInstance() {
+        if (sUserRepository == null)
+            sUserRepository = new UserRepository();
+        return sUserRepository;
+    }
+
+    private UserRepository() {
+
+        mUsers = new ArrayList<>();
+        mUsers.add(new User("admin", "admin", UserType.ADMIN));
+        for (int i = 1; i < mNumberOfUsers; i++) {
+            User user = new User();
+            mUsers.add(user);
+        }
+    }
+
+    public void addUser(User user) {
+        mUsers.add(user);
+    }
+
+    public boolean checkUserExist(String username, String password) {
+        for (User user : mUsers) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password))
+                return true;
+        }
+        return false;
+    }
+
+}

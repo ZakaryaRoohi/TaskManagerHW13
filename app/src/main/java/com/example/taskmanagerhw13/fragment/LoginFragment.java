@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.taskmanagerhw13.R;
+import com.example.taskmanagerhw13.Repository.UserRepository;
+import com.example.taskmanagerhw13.Utils.UserType;
 import com.example.taskmanagerhw13.activity.MainActivity;
 import com.example.taskmanagerhw13.activity.TaskPagerActivity;
+import com.example.taskmanagerhw13.model.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,6 +33,7 @@ public class LoginFragment extends Fragment {
     private Button mButtonLogIn;
     private Button mButtonSignIn;
     private Callbacks mCallbacks;
+    private UserRepository mUserRepository;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -44,7 +49,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mUserRepository = UserRepository.getInstance();
     }
 
     @Override
@@ -61,8 +66,8 @@ public class LoginFragment extends Fragment {
     }
 
     private void findAllView(View view) {
-        mEditTextUsername = view.findViewById(R.id.edit_text_username);
-        mEditTextPassword = view.findViewById(R.id.edit_text_password);
+        mEditTextUsername = view.findViewById(R.id.log_in_edit_text_username);
+        mEditTextPassword = view.findViewById(R.id.log_in_edit_text_password);
         mButtonLogIn = view.findViewById(R.id.button_login);
         mButtonSignIn = view.findViewById(R.id.button_sign_in);
     }
@@ -77,7 +82,19 @@ public class LoginFragment extends Fragment {
         mButtonLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCallbacks.onLoginClicked();
+                String username = mEditTextUsername.getText().toString();
+                String password = mEditTextPassword.getText().toString();
+                if (username.equals("") | password.equals("")) {
+                    Toast.makeText(getActivity(), "please Username and Password.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = TaskPagerActivity.newIntent(getContext(),username);
+
+                    if(mUserRepository.checkUserExist(username,password))
+                    startActivity(intent);
+                    else
+                        Toast.makeText(getActivity(), "your username or password is wrong", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }
@@ -96,11 +113,12 @@ public class LoginFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallbacks= null;
+        mCallbacks = null;
     }
 
     public interface Callbacks {
         void onLoginClicked();
+
         void onSinInClicked();
     }
 }

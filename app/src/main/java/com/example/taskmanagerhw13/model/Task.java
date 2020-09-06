@@ -2,7 +2,6 @@ package com.example.taskmanagerhw13.model;
 
 
 import com.example.taskmanagerhw13.Utils.TaskState;
-import com.example.taskmanagerhw13.Utils.UserType;
 
 import java.util.Date;
 import java.util.UUID;
@@ -14,16 +13,16 @@ public class Task {
     private TaskState mTaskState;
     private String mTaskDescription;
     private Date mTaskDate;
+    private String mUsername;
 
     public UUID getId() {
         return mId;
     }
 
-    public void setUser(UserType mUser) {
-        this.mUser = mUser;
+    public void setUser(String mUser) {
+        this.mUsername = mUser;
     }
 
-    private UserType mUser;
 
     public String getTaskDescription() {
         return mTaskDescription;
@@ -57,13 +56,13 @@ public class Task {
         mTaskState = taskState;
     }
 
-    public Task( String mTaskTitle, TaskState mTaskState, String mTaskDescription, Date mTaskDate, UserType mUser) {
+    public Task( String mTaskTitle, TaskState mTaskState, String mTaskDescription, Date mTaskDate, String mUsername) {
         this.mId = UUID.randomUUID();
         this.mTaskTitle = mTaskTitle;
         this.mTaskState = mTaskState;
         this.mTaskDescription = mTaskDescription;
         this.mTaskDate = mTaskDate;
-        this.mUser = mUser;
+        this.mUsername = mUsername;
     }
     public Task(UUID id){
         mId = id;

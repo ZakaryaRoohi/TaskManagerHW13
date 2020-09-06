@@ -28,7 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 
-public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
+public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment implements TaskDetailFragment.Callbacks {
     /**
      * get username and number of Tasks from Task activity
      */
@@ -109,8 +109,15 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
 //                taskDetailFragment.setTargetFragment(TasksFragment.this,TASK_DETAIL_REQUEST_CODE);
 //                taskDetailFragment.show(getFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
                 mCallbacks.onAddTaskClicked();
+                updateUI();
             }
         });
+    }
+
+    @Override
+    public void onTaskUpdated() {
+        TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        tasksFragment.updateUI();
     }
 
     public interface Callbacks {
@@ -203,6 +210,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     }
 
     public void updateUI() {
+
         List<Task> tasks = mTasksRepository.getList(mTaskState);
         if (mAdapter == null) {
             mAdapter = new TaskAdapter(tasks);
@@ -219,7 +227,6 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
             mLinearLayout1.setVisibility(View.VISIBLE);
             mLinearLayout2.setVisibility(View.GONE);
         }
-
     }
 
     @Override
@@ -228,9 +235,5 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         updateUI();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        updateUI();
-    }
+
 }
