@@ -31,6 +31,7 @@ public class SignInFragment extends Fragment {
     private EditText mEditTextPassword;
     private Callbacks mCallBacks;
     private UserRepository mUserRepository;
+
     public SignInFragment() {
         // Required empty public constructor
     }
@@ -64,8 +65,8 @@ public class SignInFragment extends Fragment {
     private void findAllView(View view) {
         mButtonSignUp = view.findViewById(R.id.button_Sign_up);
         mButtonBack = view.findViewById(R.id.button_back);
-        mEditTextPassword = view .findViewById(R.id.sign_in_edit_text_password);
-        mEditTextUsername=view.findViewById(R.id.sign_in_edit_text_username);
+        mEditTextPassword = view.findViewById(R.id.sign_in_edit_text_password);
+        mEditTextUsername = view.findViewById(R.id.sign_in_edit_text_username);
     }
 
     private void setListeners() {
@@ -80,13 +81,16 @@ public class SignInFragment extends Fragment {
             public void onClick(View v) {
                 String username = mEditTextUsername.getText().toString();
                 String password = mEditTextPassword.getText().toString();
-                if(username.equals("")|password.equals(""))
-                {
-                    Toast.makeText(getActivity(), "please Username and Password.", Toast.LENGTH_SHORT).show();
-                }else {
-                    User user = new User(username, password, UserType.USER);
-                    mUserRepository.addUser(user);
-                    mCallBacks.onBackClicked();
+                if (username.equals("") | password.equals("")) {
+                    Toast.makeText(getActivity(), "please Enter Username and Password.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (mUserRepository.checkUserExist(username, password))
+                        Toast.makeText(getActivity(), "This username and password already exist!", Toast.LENGTH_SHORT).show();
+                    else {
+                        User user = new User(username, password, UserType.USER);
+                        mUserRepository.addUser(user);
+                        mCallBacks.onBackClicked();
+                    }
                 }
             }
         });

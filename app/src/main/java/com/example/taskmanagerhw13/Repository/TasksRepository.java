@@ -85,10 +85,16 @@ public class TasksRepository implements Serializable {
         return mTasks.indexOf(task);
     }
 
-    public void cleanTaskRepository() {
+    public void clearTaskRepository() {
         sTasksRepository = null;
     }
 
+    public void deleteUserTask(String username){
+        for (Task task:mTasks) {
+            if (task.getUsername().equals(username))
+                mTasks.remove(task);
+        }
+    }
     public Task get(UUID uuid) {
         for (Task task : mTasks) {
             if (task.getId().equals(uuid))
@@ -104,5 +110,12 @@ public class TasksRepository implements Serializable {
         updateTask.setTaskState(task.getTaskState());
         updateTask.setTaskDate(task.getTaskDate());
 
+    }
+    public boolean checkTaskExists(Task searchTask){
+        for (Task task : mTasks) {
+            if (task.equals(searchTask))
+                return  false;
+        }
+        return  true;
     }
 }

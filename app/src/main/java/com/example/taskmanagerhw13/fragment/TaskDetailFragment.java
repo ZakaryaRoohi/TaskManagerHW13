@@ -169,15 +169,17 @@ public class TaskDetailFragment extends DialogFragment {
                 if (mTask.getTaskState() == null)
                     Toast.makeText(getActivity(), "please choose Task State", Toast.LENGTH_SHORT).show();
                 else {
-
-                    mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
-                    mTask.setTaskDescription((mEditTextDescription.getText().toString()));
-                    updateTask();
-                    mCallbacks.updateTasksFragment(mTask.getTaskState() , mTask.getUsername());
-                    getDialog().cancel();
+                        mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
+                        mTask.setTaskDescription((mEditTextDescription.getText().toString()));
+                        if (mTasksRepository.checkTaskExists(mTask))
+                            Toast.makeText(getActivity(), "this Task Already exist!", Toast.LENGTH_SHORT).show();
+                        else {
+                            updateTask();
+                            mCallbacks.updateTasksFragment(mTask.getTaskState(), mTask.getUsername());
+                            getDialog().cancel();
 //                    TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 //                    tasksFragment.updateUI();
-
+                        }
                 }
             }
         });
@@ -234,7 +236,7 @@ public class TaskDetailFragment extends DialogFragment {
     }
 
     public interface Callbacks {
-        void updateTasksFragment(TaskState taskState , String username);
+        void updateTasksFragment(TaskState taskState, String username);
     }
 //    @Override
 //    public void onStart()

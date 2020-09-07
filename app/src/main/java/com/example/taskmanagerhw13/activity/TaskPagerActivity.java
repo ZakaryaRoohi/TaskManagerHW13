@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -20,15 +19,10 @@ import com.example.taskmanagerhw13.Repository.UserRepository;
 import com.example.taskmanagerhw13.Utils.TaskState;
 import com.example.taskmanagerhw13.fragment.TaskDetailFragment;
 import com.example.taskmanagerhw13.fragment.TasksFragment;
-import com.example.taskmanagerhw13.model.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -179,7 +173,9 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
         if (mUserRepository.getUserType(mUsername) != null) {
             switch (mUserRepository.getUserType(mUsername)) {
                 case USER:
-                    return super.onCreateOptionsMenu(menu);
+                    MenuInflater inflater1 = getMenuInflater();
+                    inflater1.inflate(R.menu.menu_user_task_pager, menu);
+                    return true;
                 case ADMIN:
                     MenuInflater inflater = getMenuInflater();
                     inflater.inflate(R.menu.menu_task_pager, menu);
@@ -202,8 +198,18 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
                 builder.setMessage(R.string.delete_question);
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        mTasksRepository.cleanTaskRepository();
+//                        mTasksRepository.clearTaskRepository();
+//                        viewPager.setAdapter(pagerAdapter);
+                        switch (mUserRepository.getUserType(mUsername)) {
+                            case USER:
+                                mTasksRepository.deleteUserTask(mUsername);
+                                viewPager.setAdapter(pagerAdapter);
+                                break;
+                            case ADMIN:
+                                mTasksRepository.clearTaskRepository();
                         viewPager.setAdapter(pagerAdapter);
+                                break;
+                        }
                     }
                 });
                 builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
