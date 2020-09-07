@@ -48,6 +48,7 @@ public class SignInFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+//        setHasOptionsMenu(false);
         mUserRepository = UserRepository.getInstance();
     }
 

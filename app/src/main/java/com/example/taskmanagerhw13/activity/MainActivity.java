@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.fragment.LoginFragment;
 import com.example.taskmanagerhw13.fragment.SignInFragment;
+import com.example.taskmanagerhw13.fragment.UserListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements SignInFragment.Callbacks, LoginFragment.Callbacks{
@@ -51,7 +52,11 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "this Feature will be add soon!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_item_users:
-
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, UserListFragment.newInstance())
+                        .commit();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

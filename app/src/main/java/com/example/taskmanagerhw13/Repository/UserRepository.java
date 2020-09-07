@@ -49,5 +49,13 @@ public class UserRepository {
         }
         return null;
     }
+    public List<User> getList() {
+        List<User> userList = new ArrayList<>();
+        for (User user : mUsers) {
+
+                userList.add(user);
+        }
+        return userList;
+    }
 
 }
