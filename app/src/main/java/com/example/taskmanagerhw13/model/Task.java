@@ -19,6 +19,10 @@ public class Task {
         return mId;
     }
 
+    public String getUsername() {
+        return mUsername;
+    }
+
     public void setUser(String mUser) {
         this.mUsername = mUser;
     }
@@ -56,7 +60,7 @@ public class Task {
         mTaskState = taskState;
     }
 
-    public Task( String mTaskTitle, TaskState mTaskState, String mTaskDescription, Date mTaskDate, String mUsername) {
+    public Task(String mTaskTitle, TaskState mTaskState, String mTaskDescription, Date mTaskDate, String mUsername) {
         this.mId = UUID.randomUUID();
         this.mTaskTitle = mTaskTitle;
         this.mTaskState = mTaskState;
@@ -64,12 +68,17 @@ public class Task {
         this.mTaskDate = mTaskDate;
         this.mUsername = mUsername;
     }
-    public Task(UUID id){
+
+    public Task(UUID id) {
         mId = id;
         mTaskDate = new Date();
 
 
+    }
 
+    public Task(String username) {
+        this(UUID.randomUUID());
+        this.mUsername = username;
     }
     public Task(){
         this(UUID.randomUUID());

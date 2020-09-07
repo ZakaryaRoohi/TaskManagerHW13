@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_item_setting:
-                Toast.makeText(this,"this Feature will be add soon!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "this Feature will be add soon!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_item_users:
 

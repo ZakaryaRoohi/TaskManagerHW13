@@ -3,15 +3,16 @@ package com.example.taskmanagerhw13.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.Repository.TasksRepository;
+import com.example.taskmanagerhw13.Utils.DisplayTools;
 import com.example.taskmanagerhw13.Utils.TaskState;
 import com.example.taskmanagerhw13.model.Task;
 
@@ -89,12 +91,13 @@ public class TaskDetailFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mCallbacks=null;
+        mCallbacks = null;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_task_detail, container, false);
 
         findViews(view);
@@ -152,40 +155,6 @@ public class TaskDetailFragment extends DialogFragment {
 //    }
 
     private void setListeners() {
-//        mEditTextDescription.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                mTask.setTaskDescription(s.toString());
-//                updateTask();
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-//        mEditTextTaskTitle.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                mTask.setTaskTitle(s.toString());
-//                updateTask();
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
         mButtonDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -204,9 +173,10 @@ public class TaskDetailFragment extends DialogFragment {
                     mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
                     mTask.setTaskDescription((mEditTextDescription.getText().toString()));
                     updateTask();
-                    mCallbacks.onTaskUpdated();
-                    getDialog().hide();
-
+                    mCallbacks.updateTasksFragment(mTask.getTaskState() , mTask.getUsername());
+                    getDialog().cancel();
+//                    TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//                    tasksFragment.updateUI();
 
                 }
             }
@@ -214,7 +184,7 @@ public class TaskDetailFragment extends DialogFragment {
         mButtonDiscard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDialog().hide();
+                getDialog().cancel();
             }
         });
         mRadioButtonDone.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +234,24 @@ public class TaskDetailFragment extends DialogFragment {
     }
 
     public interface Callbacks {
-        void onTaskUpdated();
+        void updateTasksFragment(TaskState taskState , String username);
     }
+//    @Override
+//    public void onStart()
+//    {
+//        super.onStart();
+//        // lock screen;
+//        DisplayTools.Orientation orientation = DisplayTools.getDisplatOrientation(getActivity());
+//        getActivity().setRequestedOrientation(orientation == DisplayTools.Orientation.LANDSCAPE
+//                ? ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//                : ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+//    }
+//    @Override
+//    public void onStop()
+//    {
+//        super.onStop();
+//        // unlock screen;
+//        getActivity().setRequestedOrientation(getActivity().getResources().getConfiguration().orientation);
+//    }
 
 }

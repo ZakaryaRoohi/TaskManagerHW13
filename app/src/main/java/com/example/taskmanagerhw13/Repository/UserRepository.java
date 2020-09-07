@@ -42,4 +42,12 @@ public class UserRepository {
         return false;
     }
 
+    public UserType getUserType(String username){
+        for (User user : mUsers) {
+            if (user.getUsername().equals(username))
+                return user.getUserType();
+        }
+        return null;
+    }
+
 }

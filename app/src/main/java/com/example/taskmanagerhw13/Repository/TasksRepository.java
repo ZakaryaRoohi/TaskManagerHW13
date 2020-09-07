@@ -1,7 +1,6 @@
 package com.example.taskmanagerhw13.Repository;
 
 
-
 import com.example.taskmanagerhw13.Utils.TaskState;
 import com.example.taskmanagerhw13.model.Task;
 
@@ -60,13 +59,23 @@ public class TasksRepository implements Serializable {
         return taskList;
     }
 
+    public List<Task> getList(TaskState taskState, String username) {
+        List<Task> taskList = new ArrayList<>();
+        for (Task task : mTasks) {
+            if (task.getTaskState() == taskState && task.getUsername().equals(username))
+                taskList.add(task);
+        }
+        return taskList;
+    }
+
     public void addTask() {
         Task task = new Task();
-        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()+1));
+        task.setTaskTitle("Task : " + (sTasksRepository.getList().size() + 1));
 //        task.setTaskState(randomTaskState());
         mTasks.add(task);
     }
-    public void addTask(Task task){
+
+    public void addTask(Task task) {
 //        task.setTaskTitle("Task : " + (sTasksRepository.getList().size()+1));
 //        task.setTaskDescription("new");
         mTasks.add(task);
@@ -81,12 +90,13 @@ public class TasksRepository implements Serializable {
     }
 
     public Task get(UUID uuid) {
-        for (Task task: mTasks) {
+        for (Task task : mTasks) {
             if (task.getId().equals(uuid))
                 return task;
         }
         return null;
     }
+
     public void update(Task task) {
         Task updateTask = get(task.getId());
         updateTask.setTaskTitle(task.getTaskTitle());
