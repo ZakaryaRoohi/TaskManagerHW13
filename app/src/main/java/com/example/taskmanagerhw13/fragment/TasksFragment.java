@@ -1,12 +1,10 @@
 package com.example.taskmanagerhw13.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +26,7 @@ import com.example.taskmanagerhw13.Utils.TaskState;
 import com.example.taskmanagerhw13.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
@@ -48,6 +48,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     private LinearLayout mLinearLayout1;
     private LinearLayout mLinearLayout2;
     private Callbacks mCallbacks;
+
 
     private String mUsername;
     private UserRepository mUserRepository;
@@ -82,12 +83,11 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(savedInstanceState!=null){
+        if (savedInstanceState != null) {
             mUsername = savedInstanceState.getString(BUNDLE_USERNAME);
             mTaskState = (TaskState) savedInstanceState.getSerializable(BUNDLE_TASK_STATE);
-            Toast.makeText(getActivity(), "username:" +mUsername, Toast.LENGTH_SHORT).show();
-        }
-        else {
+
+        } else {
             mUsername = getArguments().getString(ARG_USERNAME);
             mTaskState = (TaskState) getArguments().getSerializable(ARG_TASK_STATE);
         }
@@ -138,6 +138,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
                 updateUI();
             }
         });
+
     }
 
 
@@ -160,6 +161,9 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         private TextView mTextViewTaskTittle;
         private TextView mTextViewTaskState;
         private TextView mTextViewTaskDate;
+        private ImageView mImageViewShareTask;
+        private ImageView mImageViewDeleteTask;
+
         private Task mTask;
 
         public TaskHolder(@NonNull View itemView) {
@@ -167,7 +171,8 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
             mTextViewTaskTittle = itemView.findViewById(R.id.list_row_task_title);
             mTextViewTaskState = itemView.findViewById(R.id.list_row_Task_state);
             mTextViewTaskDate = itemView.findViewById(R.id.text_view_task_date);
-
+            mImageViewShareTask = itemView.findViewById(R.id.image_view_share);
+            mImageViewDeleteTask = itemView.findViewById(R.id.image_view_delete_task);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,6 +184,49 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
 
                 }
             });
+            mImageViewShareTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent sendIntent = new Intent(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, getReportText());
+                    sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Task Report");
+                    sendIntent.setType("text/plain");
+
+                    Intent shareIntent = Intent.createChooser(sendIntent, null);
+                    if (sendIntent.resolveActivity(getActivity().getPackageManager()) != null)
+                        startActivity(shareIntent);
+
+                }
+            });
+            mImageViewDeleteTask.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mTasksRepository.delete(mTask.getId());
+                    updateUI();
+                }
+            });
+        }
+        private String getReportText() {
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
+            String dateString = simpleDateFormat.format(mTask.getTaskDate()) ;
+
+
+
+            String titleString = mTask.getTaskTitle() == null ?
+                   "there is no Title" :
+                    "Task Title: " + mTask.getTaskTitle();
+            String descriptionString = mTask.getTaskDescription() == null ?
+                    " there is no description" :
+                    " Task description: " + mTask.getTaskTitle();
+
+            String report = ("Task Report:"+
+                    titleString+
+                    descriptionString+
+                    "task state: "+mTask.getTaskDescription()+
+                    dateString
+                    );
+
+            return report;
         }
 
         public void bindTask(Task task) {
@@ -233,7 +281,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     public void updateUI() {
 
         List<Task> tasks;
-        mUserRepository=UserRepository.getInstance();
+        mUserRepository = UserRepository.getInstance();
         if (mUserRepository.getUserType(mUsername) != null) {
             switch (mUserRepository.getUserType(mUsername)) {
                 case USER:

@@ -39,9 +39,9 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
     private ViewPager2 viewPager;
     private String mUsername;
     private UserRepository mUserRepository;
-    private TasksFragment tasksFragmentDone;
-    private TasksFragment tasksFragmentDoing;
-    private TasksFragment tasksFragmentTodo;
+    private TasksFragment mTasksFragmentDone;
+    private TasksFragment mTasksFragmentDoing;
+    private TasksFragment mTasksFragmentTodo;
 
     String[] titles = {"Done", "Doing", "Todo"};
     private FragmentStateAdapter pagerAdapter;
@@ -58,14 +58,16 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
         setContentView(R.layout.activity_task_pager);
         if (savedInstanceState != null) {
             mUsername = savedInstanceState.getString(BUNDLE_USERNAME);
+
         }else {
             Intent intent = getIntent();
             mUsername = intent.getStringExtra(EXTRA_BUNDLE_USERNAME);
+
         }
         this.setTitle(mUsername);
-        tasksFragmentDone = TasksFragment.newInstance(TaskState.DONE, mUsername);
-        tasksFragmentDoing = TasksFragment.newInstance(TaskState.DOING, mUsername);
-        tasksFragmentTodo = TasksFragment.newInstance(TaskState.TODO, mUsername);
+        mTasksFragmentDone = TasksFragment.newInstance(TaskState.DONE, mUsername);
+        mTasksFragmentDoing = TasksFragment.newInstance(TaskState.DOING, mUsername);
+        mTasksFragmentTodo = TasksFragment.newInstance(TaskState.TODO, mUsername);
 
         mUserRepository = UserRepository.getInstance();
         mTasksRepository = TasksRepository.getInstance();
@@ -131,15 +133,16 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
 //            tasksFragment1.updateUI();
 //        }
 //        viewPager.setAdapter(pagerAdapter);
+        mTasksRepository = TasksRepository.getInstance();
         switch (taskState) {
             case DONE:
-                tasksFragmentDone.updateUI();
+                mTasksFragmentDone.updateUI();
                 break;
             case DOING:
-                tasksFragmentDoing.updateUI();
+                mTasksFragmentDoing.updateUI();
                 break;
             case TODO:
-                tasksFragmentTodo.updateUI();
+                mTasksFragmentTodo.updateUI();
                 break;
         }
 
@@ -182,13 +185,12 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
             switch (position) {
                 case 0:
 //                    return TasksFragment.newInstance(TaskState.DONE, mUsername);
-                    return tasksFragmentDone;
+                    return mTasksFragmentDone;
                 case 1:
 //                    return TasksFragment.newInstance(TaskState.DOING, mUsername);
-                    return tasksFragmentDoing;
+                    return mTasksFragmentDoing;
                 case 2:
-//                    return TasksFragment.newInstance(TaskState.TODO, mUsername);
-                    return tasksFragmentTodo;
+                    return mTasksFragmentTodo;
             }
             return null;
         }
@@ -205,7 +207,7 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
                     return true;
                 case ADMIN:
                     MenuInflater inflater = getMenuInflater();
-                    inflater.inflate(R.menu.menu_task_pager, menu);
+                    inflater.inflate(R.menu.menu_admin_task_pager, menu);
                     return true;
             }
 
@@ -223,6 +225,7 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage(R.string.delete_question);
+
                 builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 //                        mTasksRepository.clearTaskRepository();
@@ -246,10 +249,23 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
-
+                return true;
+            case R.id.menu_item_log_out:
+                    this.finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        mTasksFragmentDone = TasksFragment.newInstance(TaskState.DONE, mUsername);
+//        mTasksFragmentDoing = TasksFragment.newInstance(TaskState.DOING, mUsername);
+//        mTasksFragmentTodo = TasksFragment.newInstance(TaskState.TODO, mUsername);
+//        mTasksFragmentDone.updateUI();
+//        mTasksFragmentDoing.updateUI();
+//        mTasksFragmentTodo.updateUI();
     }
 }

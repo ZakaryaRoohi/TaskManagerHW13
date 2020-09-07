@@ -95,6 +95,12 @@ public class TasksRepository implements Serializable {
                 mTasks.remove(task);
         }
     }
+    public void delete(UUID taskId){
+        for (Task task:mTasks) {
+            if (task.getId().equals(taskId))
+                mTasks.remove(task);
+        }
+    }
     public Task get(UUID uuid) {
         for (Task task : mTasks) {
             if (task.getId().equals(uuid))

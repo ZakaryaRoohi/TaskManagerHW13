@@ -2,20 +2,34 @@ package com.example.taskmanagerhw13.model;
 
 import com.example.taskmanagerhw13.Utils.UserType;
 
+import java.util.Date;
+
 public class User {
     private String username;
     private String password;
     private UserType userType;
 
+
+
+    private Date userDateCreated;
+
     public User(String username, String password, UserType userType) {
         this.username = username;
         this.password = password;
         this.userType = userType;
+        this.userDateCreated = new Date();
     }
     public User(){
+        this.userDateCreated = new Date();
 
     }
+    public Date getUserDateCreated() {
+        return userDateCreated;
+    }
 
+    public void setUserDateCreated(Date mUserDateCreated) {
+        this.userDateCreated = mUserDateCreated;
+    }
     public String getUsername() {
         return username;
     }
