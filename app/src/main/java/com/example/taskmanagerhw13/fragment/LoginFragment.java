@@ -121,4 +121,11 @@ public class LoginFragment extends Fragment {
 
         void onSinInClicked();
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mEditTextUsername.setText("");
+        mEditTextPassword.setText("");
+    }
 }

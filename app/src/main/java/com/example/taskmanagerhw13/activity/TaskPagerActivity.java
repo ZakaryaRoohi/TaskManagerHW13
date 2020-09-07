@@ -31,13 +31,17 @@ import android.widget.Toast;
 
 public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFragment.Callbacks {
 
-    public static final String EXTRA_BUNDLE_USERNAME = "extraBundleUsername";
+    public static final String EXTRA_BUNDLE_USERNAME = "com.example.taskmanagerhw13.activity.extraBundleUsername";
     public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
     public static final int TASK_DETAIL_REQUEST_CODE = 101;
+    public static final String BUNDLE_USERNAME = "com.example.taskmanagerhw13.activity.bundleUsername";
     private TasksRepository mTasksRepository;
     private ViewPager2 viewPager;
     private String mUsername;
     private UserRepository mUserRepository;
+    private TasksFragment tasksFragmentDone;
+    private TasksFragment tasksFragmentDoing;
+    private TasksFragment tasksFragmentTodo;
 
     String[] titles = {"Done", "Doing", "Todo"};
     private FragmentStateAdapter pagerAdapter;
@@ -52,11 +56,16 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_pager);
-
-        Intent intent = getIntent();
-        mUsername = intent.getStringExtra(EXTRA_BUNDLE_USERNAME);
+        if (savedInstanceState != null) {
+            mUsername = savedInstanceState.getString(BUNDLE_USERNAME);
+        }else {
+            Intent intent = getIntent();
+            mUsername = intent.getStringExtra(EXTRA_BUNDLE_USERNAME);
+        }
         this.setTitle(mUsername);
-
+        tasksFragmentDone = TasksFragment.newInstance(TaskState.DONE, mUsername);
+        tasksFragmentDoing = TasksFragment.newInstance(TaskState.DOING, mUsername);
+        tasksFragmentTodo = TasksFragment.newInstance(TaskState.TODO, mUsername);
 
         mUserRepository = UserRepository.getInstance();
         mTasksRepository = TasksRepository.getInstance();
@@ -71,6 +80,12 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
                 (tab, position) -> tab.setText(titles[position])
         ).attach();
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_USERNAME, mUsername);
     }
 
     private void findViews() {
@@ -115,7 +130,18 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
 //            TasksFragment tasksFragment1 = TasksFragment.newInstance(taskState,username);
 //            tasksFragment1.updateUI();
 //        }
-        viewPager.setAdapter(pagerAdapter);
+//        viewPager.setAdapter(pagerAdapter);
+        switch (taskState) {
+            case DONE:
+                tasksFragmentDone.updateUI();
+                break;
+            case DOING:
+                tasksFragmentDoing.updateUI();
+                break;
+            case TODO:
+                tasksFragmentTodo.updateUI();
+                break;
+        }
 
 //        TasksFragment tasksFragment = (TasksFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 //        tasksFragment.update();
@@ -155,13 +181,14 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
         public Fragment createFragment(int position) {
             switch (position) {
                 case 0:
-                    return TasksFragment.newInstance(TaskState.DONE, mUsername);
+//                    return TasksFragment.newInstance(TaskState.DONE, mUsername);
+                    return tasksFragmentDone;
                 case 1:
-                    return TasksFragment.newInstance(TaskState.DOING, mUsername);
-
+//                    return TasksFragment.newInstance(TaskState.DOING, mUsername);
+                    return tasksFragmentDoing;
                 case 2:
-                    return TasksFragment.newInstance(TaskState.TODO, mUsername);
-
+//                    return TasksFragment.newInstance(TaskState.TODO, mUsername);
+                    return tasksFragmentTodo;
             }
             return null;
         }
@@ -207,7 +234,7 @@ public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFr
                                 break;
                             case ADMIN:
                                 mTasksRepository.clearTaskRepository();
-                        viewPager.setAdapter(pagerAdapter);
+                                viewPager.setAdapter(pagerAdapter);
                                 break;
                         }
                     }

@@ -40,6 +40,7 @@ public class TaskDetailFragment extends DialogFragment {
     public static final String ARG_TASK_ID = "ARGTaskId";
     public static final String DIALOG_FRAGMENT_TAG = "Dialog";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
+    public static final String BUNDLE_TASK_ID = "bundleTaskId";
 
     private TasksRepository mTasksRepository;
     private Task mTask;
@@ -53,6 +54,7 @@ public class TaskDetailFragment extends DialogFragment {
     private Button mButtonSave;
     private Button mButtonDiscard;
     private Callbacks mCallbacks;
+    private UUID mTaskId;
 
     public TaskDetailFragment() {
         // Required empty public constructor
@@ -70,11 +72,21 @@ public class TaskDetailFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTasksRepository = TasksRepository.getInstance();
-        UUID taskId = (UUID) getArguments().getSerializable(ARG_TASK_ID);
-        mTask = (Task) mTasksRepository.get(taskId);
-//        Toast.makeText(getActivity(),"uuid"+mTask.getId(),Toast.LENGTH_SHORT).show();
 
+        if(savedInstanceState!=null){
+            mTaskId = (UUID) savedInstanceState.getSerializable(BUNDLE_TASK_ID);
+        }else{
+            mTaskId = (UUID) getArguments().getSerializable(ARG_TASK_ID);
+        }
+        mTasksRepository = TasksRepository.getInstance();
+        mTask = (Task) mTasksRepository.get(mTaskId);
+
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(BUNDLE_TASK_ID, mTaskId);
     }
 
     @Override
@@ -169,17 +181,17 @@ public class TaskDetailFragment extends DialogFragment {
                 if (mTask.getTaskState() == null)
                     Toast.makeText(getActivity(), "please choose Task State", Toast.LENGTH_SHORT).show();
                 else {
-                        mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
-                        mTask.setTaskDescription((mEditTextDescription.getText().toString()));
-                        if (mTasksRepository.checkTaskExists(mTask))
-                            Toast.makeText(getActivity(), "this Task Already exist!", Toast.LENGTH_SHORT).show();
-                        else {
-                            updateTask();
-                            mCallbacks.updateTasksFragment(mTask.getTaskState(), mTask.getUsername());
-                            getDialog().cancel();
+                    mTask.setTaskTitle(mEditTextTaskTitle.getText().toString());
+                    mTask.setTaskDescription((mEditTextDescription.getText().toString()));
+                    if (mTasksRepository.checkTaskExists(mTask))
+                        Toast.makeText(getActivity(), "this Task Already exist!", Toast.LENGTH_SHORT).show();
+                    else {
+                        updateTask();
+                        mCallbacks.updateTasksFragment(mTask.getTaskState(), mTask.getUsername());
+                        getDialog().cancel();
 //                    TasksFragment tasksFragment = (TasksFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 //                    tasksFragment.updateUI();
-                        }
+                    }
                 }
             }
         });

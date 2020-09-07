@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.taskmanagerhw13.R;
@@ -37,6 +38,8 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
     public static final int TASK_DETAIL_REQUEST_CODE = 101;
     public static final String ARG_USERNAME = "ArgsUsername";
+    public static final String BUNDLE_USERNAME = "bundleUsername";
+    public static final String BUNDLE_TASK_STATE = "BundleTaskState";
     private TasksRepository mTasksRepository;
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
@@ -70,16 +73,26 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskState = (TaskState) getArguments().getSerializable(ARG_TASK_STATE);
+
         mTasksRepository = TasksRepository.getInstance();
-        mUsername = getArguments().getString(ARG_USERNAME);
         mUserRepository = UserRepository.getInstance();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        if(savedInstanceState!=null){
+            mUsername = savedInstanceState.getString(BUNDLE_USERNAME);
+            mTaskState = (TaskState) savedInstanceState.getSerializable(BUNDLE_TASK_STATE);
+            Toast.makeText(getActivity(), "username:" +mUsername, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            mUsername = getArguments().getString(ARG_USERNAME);
+            mTaskState = (TaskState) getArguments().getSerializable(ARG_TASK_STATE);
+        }
+        mTasksRepository = TasksRepository.getInstance();
+        mUserRepository = UserRepository.getInstance();
         View view = inflater.inflate(R.layout.fragment_tasks, container, false);
 
         findViews(view);
@@ -220,6 +233,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     public void updateUI() {
 
         List<Task> tasks;
+        mUserRepository=UserRepository.getInstance();
         if (mUserRepository.getUserType(mUsername) != null) {
             switch (mUserRepository.getUserType(mUsername)) {
                 case USER:
@@ -231,6 +245,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
                     adapter(tasks);
             }
         }
+
 //        List<Task> tasks = mTasksRepository.getList(mTaskState, mUsername);
 //        if (mAdapter == null) {
 //            mAdapter = new TaskAdapter(tasks);
@@ -266,15 +281,22 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
             mLinearLayout2.setVisibility(View.GONE);
         }
     }
-public  void update(){
+
+    public void update() {
 //    mAdapter.notifyDataSetChanged();
-    mRecyclerView.setAdapter(mAdapter);
-}
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
     }
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(BUNDLE_USERNAME, mUsername);
+        outState.putSerializable(BUNDLE_TASK_STATE, mTaskState);
+    }
 }
