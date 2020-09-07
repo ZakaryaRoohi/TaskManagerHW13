@@ -1,6 +1,7 @@
 package com.example.taskmanagerhw13.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -9,6 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -33,7 +35,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class TaskPagerActivity extends AppCompatActivity implements  TaskDetailFragment.Callbacks {
+public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFragment.Callbacks {
 
     public static final String EXTRA_BUNDLE_USERNAME = "extraBundleUsername";
     public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
@@ -63,7 +65,7 @@ public class TaskPagerActivity extends AppCompatActivity implements  TaskDetailF
 
 
         mUserRepository = UserRepository.getInstance();
-        mTasksRepository=TasksRepository.getInstance();
+        mTasksRepository = TasksRepository.getInstance();
         findViews();
         setListeners();
 
@@ -172,8 +174,6 @@ public class TaskPagerActivity extends AppCompatActivity implements  TaskDetailF
     }
 
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mUserRepository.getUserType(mUsername) != null) {
@@ -194,15 +194,26 @@ public class TaskPagerActivity extends AppCompatActivity implements  TaskDetailF
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_setting:
-                Toast.makeText(this, "this Feature will be add soon!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.add_soon, Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.menu_item_clear_tasks:
-                Toast.makeText(this, "repository cleared!", Toast.LENGTH_SHORT).show();
 
-                mTasksRepository.cleanTaskRepository();
-                viewPager.setAdapter(pagerAdapter);
-//                TasksFragment tasksFragment = (TasksFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-//                tasksFragment.updateUI();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.delete_question);
+                builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mTasksRepository.cleanTaskRepository();
+                        viewPager.setAdapter(pagerAdapter);
+                    }
+                });
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
