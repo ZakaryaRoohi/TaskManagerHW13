@@ -8,7 +8,7 @@ public class User {
     private String username;
     private String password;
     private UserType userType;
-
+    private int numberOfTasks = 0;
 
 
     private Date userDateCreated;
@@ -18,7 +18,17 @@ public class User {
         this.password = password;
         this.userType = userType;
         this.userDateCreated = new Date();
+
     }
+
+    public int getNumberOfTasks() {
+        return numberOfTasks;
+    }
+
+    public void setNumberOfTasks(int numberOfTasks) {
+        this.numberOfTasks = numberOfTasks;
+    }
+
     public User(){
         this.userDateCreated = new Date();
 

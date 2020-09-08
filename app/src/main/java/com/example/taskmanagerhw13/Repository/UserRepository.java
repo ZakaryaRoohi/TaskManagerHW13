@@ -58,4 +58,10 @@ public class UserRepository {
         return userList;
     }
 
+    public void deleteUser(User deleteUser){
+        for (User user : mUsers) {
+                if(user.getUsername().equals(deleteUser.getUsername()))
+                    mUsers.remove(user);
+        }
+    }
 }

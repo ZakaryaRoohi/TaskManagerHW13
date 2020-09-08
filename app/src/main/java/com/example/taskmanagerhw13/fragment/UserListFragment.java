@@ -1,8 +1,10 @@
 package com.example.taskmanagerhw13.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -87,6 +89,22 @@ public class UserListFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are You sure to delete User?");
+
+                    builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            mUserRepository.deleteUser(mUser);
+                            updateUI();
+                        }
+                    });
+                    builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // User cancelled the dialog
+                        }
+                    });
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
                 }
             });
         }
@@ -149,5 +167,7 @@ public class UserListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+
 
 }

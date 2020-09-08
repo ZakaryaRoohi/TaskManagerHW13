@@ -1,7 +1,9 @@
 package com.example.taskmanagerhw13.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.fragment.LoginFragment;
 import com.example.taskmanagerhw13.fragment.SignInFragment;
+import com.example.taskmanagerhw13.fragment.TasksFragment;
 import com.example.taskmanagerhw13.fragment.UserListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements SignInFragment.Callbacks, LoginFragment.Callbacks{
-
+    private LoginFragment mLoginFragment;
+    private SignInFragment mSignInFragment;
+    private UserListFragment mUserListFragment;
+private FragmentManager mFragmentManager;
     public static Intent newIntent(Context context){
         Intent intent = new Intent(context,MainActivity.class);
         return intent;
@@ -28,14 +34,32 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//        mLoginFragment = LoginFragment.newInstance();
+//        mSignInFragment = SignInFragment.newInstance();
+//        mUserListFragment=UserListFragment.newInstance();
+//
+//        mFragmentManager = getSupportFragmentManager();
+//        FragmentTransaction ft = mFragmentManager.beginTransaction();
+//        ft.addToBackStack(String.valueOf(mLoginFragment));
+//        ft.addToBackStack(String.valueOf(mSignInFragment));
+//        ft.addToBackStack(String.valueOf(mUserListFragment));
+//        ft.replace(R.id.fragment_container, mLoginFragment);
+//        ft.commit();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
 //        Fragment fragment = fragmentManager.findFragmentById(R.id.fragment_container);
 
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.fragment_container, LoginFragment.newInstance())
+                    .replace(R.id.fragment_container, mLoginFragment)
                     .commit();
 
+    }
+    @Override
+    public void onBackPressed() {
+        if (mFragmentManager.getBackStackEntryCount() > 0)
+            mFragmentManager.popBackStackImmediate();
+        else super.onBackPressed();
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
