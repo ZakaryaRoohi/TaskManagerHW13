@@ -40,6 +40,7 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
     public static final String ARG_USERNAME = "ArgsUsername";
     public static final String BUNDLE_USERNAME = "bundleUsername";
     public static final String BUNDLE_TASK_STATE = "BundleTaskState";
+    public static final String ADD_TASK_FRAGMENT_DIALOG_TAG = "AddTaskFragmentDialogTag";
     private TasksRepository mTasksRepository;
     private RecyclerView mRecyclerView;
     private TaskAdapter mAdapter;
@@ -123,18 +124,13 @@ public class TasksFragment<EndlessRecyclerViewScrollListener> extends Fragment {
         mFloatingActionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Task newTask = new Task();
+//                Task newTask = new Task(mUsername);
 //                mTasksRepository.addTask(newTask);
+//                TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(newTask.getId());
+//                taskDetailFragment.show(getActivity().getSupportFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
 //                updateUI();
-//                TaskDetailFragment taskDetailFragment =  TaskDetailFragment.newInstance(newTask.getId());
-//                taskDetailFragment.setTargetFragment(TasksFragment.this,TASK_DETAIL_REQUEST_CODE);
-//                taskDetailFragment.show(getFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
-
-//                mCallbacks.onAddTaskClicked();
-                Task newTask = new Task(mUsername);
-                mTasksRepository.addTask(newTask);
-                TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(newTask.getId());
-                taskDetailFragment.show(getActivity().getSupportFragmentManager(), TASK_DETAIL_FRAGMENT_DIALOG_TAG);
+                AddTaskFragmentFragment addTaskFragmentFragment = AddTaskFragmentFragment.newInstance(mUsername);
+                addTaskFragmentFragment.show(getActivity().getSupportFragmentManager(), ADD_TASK_FRAGMENT_DIALOG_TAG);
                 updateUI();
             }
         });

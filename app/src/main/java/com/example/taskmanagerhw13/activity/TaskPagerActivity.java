@@ -17,6 +17,7 @@ import com.example.taskmanagerhw13.R;
 import com.example.taskmanagerhw13.Repository.TasksRepository;
 import com.example.taskmanagerhw13.Repository.UserRepository;
 import com.example.taskmanagerhw13.Utils.TaskState;
+import com.example.taskmanagerhw13.fragment.AddTaskFragmentFragment;
 import com.example.taskmanagerhw13.fragment.TaskDetailFragment;
 import com.example.taskmanagerhw13.fragment.TasksFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -29,7 +30,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 
-public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFragment.Callbacks {
+public class TaskPagerActivity extends AppCompatActivity implements TaskDetailFragment.Callbacks, AddTaskFragmentFragment.Callbacks {
 
     public static final String EXTRA_BUNDLE_USERNAME = "com.example.taskmanagerhw13.activity.extraBundleUsername";
     public static final String TASK_DETAIL_FRAGMENT_DIALOG_TAG = "TaskDetailFragmentDialogTag";
